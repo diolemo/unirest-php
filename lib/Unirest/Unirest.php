@@ -116,13 +116,17 @@
 				/**
 				 * Prepares a file for upload. To be used inside the parameters declaration for a request.
 				 * @param string $path The file path
+				 * @param string $filename The filename indicated
 				 */
-				public static function file($path) {
-						if (function_exists("curl_file_create")) {
-								return curl_file_create($path);
-						} else {
-								return "@" . $path;
-						}
+				public static function file($path, $filename = null) {
+					if (function_exists("curl_file_create")) {
+						$filename = basename($filename);
+						return curl_file_create($path, null, $filename);
+					} else {
+						if (!$filename) $filename = $path;
+						$filename = basename($filename);
+						return "@{$path};filename={$filename}";
+					}
 				}
 
 				/**
